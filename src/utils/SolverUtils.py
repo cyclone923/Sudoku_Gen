@@ -147,9 +147,9 @@ def multLineEr(C):    #Determine Medium  (4)
     nrows=nrows[0]
     t=False
     
-    for i in xrange(1,8,3):     #Take every combination of two by row-contigous boxes
-        for j in xrange(i,i+2,1):
-            for k in xrange(j+1,i+3,1):
+    for i in range(1,8,3):     #Take every combination of two by row-contigous boxes
+        for j in range(i,i+2,1):
+            for k in range(j+1,i+3,1):
                 a=np.array(np.arange(12))
                 add=False
                 for l in range(nrows):
@@ -171,9 +171,9 @@ def multLineEr(C):    #Determine Medium  (4)
                                     C[n,l]=0
     
     
-    for i in xrange(1,4,1):         #Take every combination of two by col-contigous boxes
-        for j in xrange(i,i+7,3):
-            for k in xrange(j+3,i+7,3):
+    for i in range(1,4,1):         #Take every combination of two by col-contigous boxes
+        for j in range(i,i+7,3):
+            for k in range(j+3,i+7,3):
                 a=np.array(np.arange(12))
                 add=False
                 for l in range(nrows):
@@ -259,12 +259,12 @@ def nakedTuplesEr(C):         #Determine Hard (6)
             a1=np.unique(cells[j,0:9])
             a1=np.delete(a1,np.array(np.where(a1==0)))
             if (a1.size==2 or a1.size==3):
-                for k in xrange(j+1,crows,1):
+                for k in range(j+1,crows,1):
                     a2=np.unique(cells[k,0:9])
                     a2=np.delete(a2,np.array(np.where(a2==0)))
                     u1=np.union1d(a1,a2)
                     if (u1.size==2 or u1.size==3):
-                        for l in xrange(k+1,crows,1):
+                        for l in range(k+1,crows,1):
                             a3=np.unique(cells[l,0:9])
                             a3=np.delete(a3,np.array(np.where(a3==0)))
                             u2=np.union1d(u1,a3)
@@ -290,12 +290,12 @@ def nakedTuplesEr(C):         #Determine Hard (6)
             a1=np.unique(cells[j,0:9])
             a1=np.delete(a1,np.array(np.where(a1==0)))
             if (a1.size==2 or a1.size==3):
-                for k in xrange(j+1,crows,1):
+                for k in range(j+1,crows,1):
                     a2=np.unique(cells[k,0:9])
                     a2=np.delete(a2,np.array(np.where(a2==0)))
                     u1=np.union1d(a1,a2)
                     if (u1.size==2 or u1.size==3):
-                        for l in xrange(k+1,crows,1):
+                        for l in range(k+1,crows,1):
                             a3=np.unique(cells[l,0:9])
                             a3=np.delete(a3,np.array(np.where(a3==0)))
                             u2=np.union1d(u1,a3)
@@ -321,12 +321,12 @@ def nakedTuplesEr(C):         #Determine Hard (6)
             a1=np.unique(cells[j,0:9])
             a1=np.delete(a1,np.array(np.where(a1==0)))
             if (a1.size==2 or a1.size==3):
-                for k in xrange(j+1,crows,1):
+                for k in range(j+1,crows,1):
                     a2=np.unique(cells[k,0:9])
                     a2=np.delete(a2,np.array(np.where(a2==0)))
                     u1=np.union1d(a1,a2)
                     if (u1.size==2 or u1.size==3):
-                        for l in xrange(k+1,crows,1):
+                        for l in range(k+1,crows,1):
                             a3=np.unique(cells[l,0:9])
                             a3=np.delete(a3,np.array(np.where(a3==0)))
                             u2=np.union1d(u1,a3)
@@ -361,7 +361,7 @@ def hiddenPairEr(C):       #Determine Hard (7)
                 for k in range(b1.size):
                     if (b1[k]!=0):
                         rc.append(k)
-                for k in xrange(j+1,9,1):
+                for k in range(j+1,9,1):
                     b2=cells[:,k]
                     if(b2[np.nonzero(b2)].size==2):
                         ispair=c[:,k]
@@ -386,7 +386,7 @@ def hiddenPairEr(C):       #Determine Hard (7)
                 for k in range(b1.size):
                     if (b1[k]!=0):
                         rc.append(k)
-                for k in xrange(j+1,9,1):
+                for k in range(j+1,9,1):
                     b2=cells[:,k]
                     if(b2[np.nonzero(b2)].size==2):
                         ispair=c[:,k]
@@ -411,7 +411,7 @@ def hiddenPairEr(C):       #Determine Hard (7)
                 for k in range(b1.size):
                     if (b1[k]!=0):
                         rc.append(k)
-                for k in xrange(j+1,9,1):
+                for k in range(j+1,9,1):
                     b2=cells[:,k]
                     if(b2[np.nonzero(b2)].size==2):
                         ispair=c[:,k]
@@ -454,7 +454,7 @@ def hiddenTupleEr(C):       #Determine Hard (8)
                                     if l not in rc:
                                         posible=False
                             if (posible):
-                                for l in xrange(k+1,9,1):
+                                for l in range(k+1,9,1):
                                     if (l!=j):
                                         b3=cells[:,l]
                                         if(b3[np.nonzero(b3)].size==2 or b3[np.nonzero(b3)].size==3):
@@ -497,7 +497,7 @@ def hiddenTupleEr(C):       #Determine Hard (8)
                                     if l not in rc:
                                         posible=False
                             if (posible):
-                                for l in xrange(k+1,9,1):
+                                for l in range(k+1,9,1):
                                     if (l!=j):
                                         b3=cells[:,l]
                                         if(b3[np.nonzero(b3)].size==2 or b3[np.nonzero(b3)].size==3):
@@ -540,7 +540,7 @@ def hiddenTupleEr(C):       #Determine Hard (8)
                                     if l not in rc:
                                         posible=False
                             if (posible):
-                                for l in xrange(k+1,9,1):
+                                for l in range(k+1,9,1):
                                     if (l!=j):
                                         b3=cells[:,l]
                                         if(b3[np.nonzero(b3)].size==2 or b3[np.nonzero(b3)].size==3):
@@ -585,7 +585,7 @@ def XWingEr(C):                 #Determine very Hard (9)
                 c=cells1[b1!=0,:]
                 rc1.append(c[0,9])
                 rc1.append(c[1,9])
-                for k in xrange(i+1,9,1):
+                for k in range(i+1,9,1):
                     if (XWing):
                         break
                     cells2=C[C[:,10]==k,:]
@@ -642,7 +642,7 @@ def XWingEr(C):                 #Determine very Hard (9)
                 c=cells1[b1!=0,:]
                 rc1.append(c[0,10])
                 rc1.append(c[1,10])
-                for k in xrange(i+1,9,1):
+                for k in range(i+1,9,1):
                     if (XWing):
                         break
                     cells2=C[C[:,9]==k,:]
@@ -707,7 +707,7 @@ def SwordFishEr(C):    #Determine very Hard (10)
                 path=np.vstack([path,c1[0,9:11]])
                 path=np.vstack([path,c1[1,9:11]])
                 path=np.delete(path,0,0)
-                for k in xrange(i+1,9,1):
+                for k in range(i+1,9,1):
                     if (swfish):
                         break
                     cells2=C[C[:,9]==k,:]
@@ -716,7 +716,7 @@ def SwordFishEr(C):    #Determine very Hard (10)
                         c2=cells2[b2!=0,:]
                         path=np.vstack([path,c2[0,9:11]])
                         path=np.vstack([path,c2[1,9:11]])
-                        for l in xrange(k+1,9,1):
+                        for l in range(k+1,9,1):
                             if (swfish):
                                 break
                             cells3=C[C[:,9]==l,:]
@@ -747,7 +747,7 @@ def SwordFishEr(C):    #Determine very Hard (10)
                 path=np.vstack([path,c1[0,9:11]])
                 path=np.vstack([path,c1[1,9:11]])
                 path=np.delete(path,0,0)
-                for k in xrange(i+1,9,1):
+                for k in range(i+1,9,1):
                     if (swfish):
                         break
                     cells2=C[C[:,10]==k,:]
@@ -756,7 +756,7 @@ def SwordFishEr(C):    #Determine very Hard (10)
                         c2=cells2[b2!=0,:]
                         path=np.vstack([path,c2[0,9:11]])
                         path=np.vstack([path,c2[1,9:11]])
-                        for l in xrange(k+1,9,1):
+                        for l in range(k+1,9,1):
                             if (swfish):
                                 break
                             cells3=C[C[:,10]==l,:]
@@ -832,13 +832,12 @@ def FindMinRow(C):
 
 
 def get_nBox(row,col):
-    box=row//3+1+2*(row//3)
-    return box +col//3
+    return 3*(row//3) +col//3 +1
 
 
 def get_matBox(nbox,A):
-    row=(nbox-1)//3+2*((nbox-1)//3)
-    col=(nbox-1)%3+2*((nbox-1)%3)
+    row=3*((nbox-1)//3)
+    col=3*((nbox-1)%3)
     box=A[row:(row+3),col:(col+3)]
     return box
 

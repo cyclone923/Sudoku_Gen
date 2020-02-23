@@ -17,6 +17,7 @@ def gen_save(num,sym,sourceimg,destination):
     num3=0
     num4=0
     num5=0
+    num6=0
     if (sym):
         for i in range(num):
             A=Gen.GenerateProb(0,0,i%11+1)
@@ -34,37 +35,74 @@ def gen_save(num,sym,sourceimg,destination):
             elif (lvl==4):
                 destination2=destination+"Hard"
                 num4=num4+1
-            else:
+            elif (lvl==5):
                 destination2=destination+"VeryHard"
                 num5=num5+1
-            
+            else:
+                destination2=destination+"NeedSearch"
+                num6=num6+1
+
             BS.CreateSudoImg(A,sourceimg,destination2)
     
     else:
-        for i in range(num):
-            A=Gen.GenerateProb(22,32,0)          # 22 to 32 knokn cells
+        easy = set()
+        medium = set()
+        hard = set()
+        i = 0
+        while len(easy) != num or len(medium) != num or len(hard) != num:
+            A=Gen.GenerateProb(22,30,0)          # 22 to 32 knokn cells
             lvl=RT.RateProb(A)
-            print(i+1)
+
+            print(i+1, BS.getStrDiff(lvl))
+            i+= 1
+
             if (lvl==1):
-                destination2=destination+"VeryEasy"
+                destination2=destination+"Easy"
                 num1=num1+1
+                if len(easy) != num:
+                    easy.add(tuple(A.flatten()))
             elif (lvl==2):
                 destination2=destination+"Easy"
                 num2=num2+1
+                if len(easy) != num:
+                    easy.add(tuple(A.flatten()))
             elif (lvl==3):
                 destination2=destination+"Medium"
                 num3=num3+1
+                if len(medium) != num:
+                    medium.add(tuple(A.flatten()))
             elif (lvl==4):
-                destination2=destination+"Hard"
+                destination2=destination+"Medium"
                 num4=num4+1
-            else:
-                destination2=destination+"VeryHard"
+                if len(medium) != num:
+                    medium.add(tuple(A.flatten()))
+            elif (lvl==5):
+                destination2=destination+"Medium"
                 num5=num5+1
-            
-            BS.CreateSudoImg(A,sourceimg,destination2)
+                if len(medium) != num:
+                    medium.add(tuple(A.flatten()))
+            else:
+                destination2=destination+"Hard"
+                num6=num6+1
+                if len(hard) != num:
+                    hard.add(tuple(A.flatten()))
+
+            print(len(easy), len(medium), len(hard))
+
+        easy = np.array(list(easy)).reshape(-1,9,9)
+        print(easy)
+        medium = np.array(list(medium)).reshape(-1,9,9)
+        print(medium)
+        hard = np.array(list(hard)).reshape(-1,9,9)
+        print(hard)
+        np.save("easy.npy", easy)
+        np.save("medium.npy", medium)
+        np.save("hard.npy", hard)
+
+        # BS.CreateSudoImg(A,sourceimg,destination2)
     
     print(" ")
-    print(num1,"very Easy, ",num2,"Easy, ",num3,"Medium, ",num4,"Hard and ",num5,"very Hard sudoku generated")
+    print(num1,"Very Easy, ",num2,"Easy, ",num3,"Medium, ",num4,"Hard, ",num5,"Very Hard and",num6,"Need Search sudoku generated")
 
 
 def CreatePdf(nums,sym,path):
@@ -151,7 +189,7 @@ def rategui():
             else:
                 Adef=deepcopy(A)
                 if (GU.CountSolutions(Adef,[],0,1)==1):
-                    diff=RT.RateProb(A)
+                    difficulty=RT.RateProb(A)
                     printMes("Rating","Your Problem is "+BS.getStrDiff(difficulty))
                 else:
                     printMes("Rating","There isn't unique solution!")
@@ -215,6 +253,9 @@ elif (choice[0:4]=="-pdf"):
     
         ve=input("How many Very Hard?\n")
         nums.append(int(ve))
+
+        ve=input("How many Need Search?\n")
+        nums.append(int(ve))
         print(" ")
         
         if (answ==1):
@@ -238,6 +279,5 @@ elif (choice[0:5]=="-rate"):
 
 elif (choice=="exit"):
     print("Bye Bye!")
-
 else:
     print("Wrong inputs! Try again...")

@@ -12,30 +12,37 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from random import randint
 import shutil
+from src.solver import solver as SL
 
 
 def CreateSudoImg(A,sourceimg,destination):   #Adds new Sudoku problem as png image to the desirable folder
-    font = ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 18)
+    # font = ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 18)
     img=Image.open(sourceimg+"/image.png")
     draw = ImageDraw.Draw(img)
     for i in range(9):
         for j in range(9):
             if (A[i,j]!=0):
-                draw.text((j*25+8,i*25+3), str(A[i,j]),font=font,fill=2)
+                draw.text((j*25+8,i*25+3), str(A[i,j]),fill=2)
                 draw = ImageDraw.Draw(img)
-       
-    file_list = os.listdir(destination)
-    file_count = len(file_list)+1
-    
-    if (file_count>9):
-        imgname="/Prob"+str(file_count)+".png"
-    else:
-        imgname="/Prob"+str(0)+str(file_count)+".png"
-    
-    img.save(destination+imgname)
-        
-        
 
+    if not os.path.exists(destination):
+        os.mkdir(destination)
+        os.mkdir(destination+"/Arr")
+        os.mkdir(destination+"/Img")
+        os.mkdir(destination+"/Sol")
+
+    file_list = os.listdir(destination+"/Arr")
+    file_count = len(file_list)+1
+
+    # imgname="/Img/Prob"+str(file_count)+".png"
+    arrayname="/Arr/Array"+str(file_count)+".npy"
+    solutionname="/Sol/Solution"+str(file_count)+".npy"
+
+    # img.save(destination+imgname)
+    np.save(destination+arrayname, A)
+    sol_A = SL.SudoSolveIt2(A, [], 1)
+    np.save(destination+solutionname, sol_A)
+        
 
 def CreateSudoPdf(nums,pathConst,source,destination):
 
@@ -44,6 +51,7 @@ def CreateSudoPdf(nums,pathConst,source,destination):
     alladd3=True
     alladd4=True
     alladd5=True
+    alladd6=True
     probConst="/Prob"
     num=sum(nums)
     patharray=[]
@@ -51,7 +59,7 @@ def CreateSudoPdf(nums,pathConst,source,destination):
     count_pages=0
     allmax=[]
     
-    for i in range(5):
+    for i in range(6):
         pathTemp=pathConst+getStrPathDiff(i+1)
         file_list = os.listdir(pathTemp)
         file_count = len(file_list)
@@ -62,6 +70,7 @@ def CreateSudoPdf(nums,pathConst,source,destination):
     probPicked3=np.arange(allmax[2])+1
     probPicked4=np.arange(allmax[3])+1
     probPicked5=np.arange(allmax[4])+1
+    probPicked6=np.arange(allmax[5])+1
     
     counter=0
 
@@ -124,7 +133,7 @@ def CreateSudoPdf(nums,pathConst,source,destination):
             diffarray.append(diff)
             erase=np.array([probPicked4[pickItem-1]])
             probPicked4=np.setdiff1d(probPicked4,erase)
-        else:
+        elif (diff==5):
             if (probPicked5.size==0):
                 if (alladd5):
                     print("Not so many very Hard Generated! Less were added... Generate more Sudoku!\n")
@@ -136,6 +145,18 @@ def CreateSudoPdf(nums,pathConst,source,destination):
             diffarray.append(diff)
             erase=np.array([probPicked5[pickItem-1]])
             probPicked5=np.setdiff1d(probPicked5,erase)
+        else:
+            if (probPicked6.size==0):
+                if (alladd6):
+                    print("Not so many very Hard Generated! Less were added... Generate more Sudoku!\n")
+                alladd6=False
+                continue
+            counter=counter+1
+            pickItem=randint(1, probPicked6.size)
+            pick=probPicked6[pickItem-1]
+            diffarray.append(diff)
+            erase=np.array([probPicked6[pickItem-1]])
+            probPicked6=np.setdiff1d(probPicked6,erase)
         
         if ((counter)%6==1):
             count_pages=count_pages+1
@@ -219,15 +240,17 @@ def append_pdf(input,output):
 
 def getStrDiff(difficulty):
     if (difficulty==1):
-        return "very Easy"
+        return "Very Easy"
     elif (difficulty==2):
         return "Easy"
     elif (difficulty==3):
         return "Medium"
     elif (difficulty==4):
         return "Hard"
+    elif (difficulty==5):
+        return "Very Hard"
     else:
-        return "very Hard"
+        return "Need Search"
         
 
 def getStrPathDiff(difficulty):
@@ -239,8 +262,10 @@ def getStrPathDiff(difficulty):
         return "Medium"
     elif (difficulty==4):
         return "Hard"
-    else:
+    elif (difficulty==5):
         return "VeryHard"
+    else:
+        return "NeedSearch"
 
 
 def getNumDiff(n,nums):
@@ -253,6 +278,8 @@ def getNumDiff(n,nums):
         return 3
     elif (n<=nums[0]+nums[1]+nums[2]+nums[3]):
         return 4
-    else:
+    elif (n<=nums[0]+nums[1]+nums[2]+nums[3]+nums[4]):
         return 5
+    else:
+        return 6
 
