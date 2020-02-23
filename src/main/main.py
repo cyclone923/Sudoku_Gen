@@ -10,6 +10,7 @@ from src.ratingSudos import rating as RT
 from src.checkers import SudoCheck as SC
 from src.solver import solver as SL
 
+import signal
 
 def gen_save(num,sym,sourceimg,destination):
     num1=0
@@ -48,14 +49,38 @@ def gen_save(num,sym,sourceimg,destination):
         easy = set()
         medium = set()
         hard = set()
+
+        easy_npy = np.load("easy.npy")
+        medium_npy = np.load("medium.npy")
+        hard_npy = np.load("hard.npy")
+        print(easy_npy.shape, medium_npy.shape, hard_npy.shape)
+        for i in easy_npy:
+            easy.add(tuple(i.flatten()))
+        for i in medium_npy:
+            medium.add(tuple(i.flatten()))
+        for i in hard_npy:
+            hard.add(tuple(i.flatten()))
+
+        def signal_handler(easy, medium, hard):
+            easy = np.array(list(easy)).reshape(-1, 9, 9)
+            medium = np.array(list(medium)).reshape(-1, 9, 9)
+            hard = np.array(list(hard)).reshape(-1, 9, 9)
+            np.save("easy.npy", easy)
+            np.save("medium.npy", medium)
+            np.save("hard.npy", hard)
+            print('You pressed Ctrl+C!')
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, lambda signal, frame: signal_handler(easy, medium, hard))
+
         i = 0
         while len(easy) != num or len(medium) != num or len(hard) != num:
-            A=Gen.GenerateProb(22,30,0)          # 22 to 32 knokn cells
+            A=Gen.GenerateProb(31,42,0)          # 22 to 32 knokn cells
             lvl=RT.RateProb(A)
-
-            print(i+1, BS.getStrDiff(lvl))
-            i+= 1
-
+            if lvl > 2:
+                print(len(easy), len(medium), len(hard))
+                print(i+1, BS.getStrDiff(lvl))
+                i+= 1
             if (lvl==1):
                 destination2=destination+"Easy"
                 num1=num1+1
@@ -87,17 +112,15 @@ def gen_save(num,sym,sourceimg,destination):
                 if len(hard) != num:
                     hard.add(tuple(A.flatten()))
 
-            print(len(easy), len(medium), len(hard))
+
 
         easy = np.array(list(easy)).reshape(-1,9,9)
-        print(easy)
         medium = np.array(list(medium)).reshape(-1,9,9)
-        print(medium)
         hard = np.array(list(hard)).reshape(-1,9,9)
-        print(hard)
         np.save("easy.npy", easy)
         np.save("medium.npy", medium)
         np.save("hard.npy", hard)
+
 
         # BS.CreateSudoImg(A,sourceimg,destination2)
     
