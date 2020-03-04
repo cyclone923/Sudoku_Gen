@@ -61,6 +61,7 @@ def gen_save(num,sym,sourceimg,destination):
         for i in hard_npy:
             hard.add(tuple(i.flatten()))
 
+
         def signal_handler(easy, medium, hard):
             easy = np.array(list(easy)).reshape(-1, 9, 9)
             medium = np.array(list(medium)).reshape(-1, 9, 9)
@@ -75,7 +76,7 @@ def gen_save(num,sym,sourceimg,destination):
 
         i = 0
         while len(easy) != num or len(medium) != num or len(hard) != num:
-            A=Gen.GenerateProb(31,42,0)          # 22 to 32 knokn cells
+            A=Gen.GenerateProb(31,42,0)          # 31 to 42 knokn cells
             lvl=RT.RateProb(A)
             if lvl > 2:
                 print(len(easy), len(medium), len(hard))
