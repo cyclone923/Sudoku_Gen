@@ -20,7 +20,7 @@ def ConstructC(A):          # C is matrix. Every row corresponds to an empty cel
     return C
 
 
-def SudoInput1(A,C):      #Single candidate method
+def SudoInput1(A,C, one_step=False):      #Single candidate method
     t=False
     nrows=C.shape
     nrows=nrows[0]
@@ -33,12 +33,14 @@ def SudoInput1(A,C):      #Single candidate method
             A[C[i,9],C[i,10]]=arr[0]
             C=clearC(C,C[i,9],C[i,10],C[i,11],arr.item(0))
             delrows=np.append(delrows,i)
+            if one_step:
+                break
     
     C=np.delete(C,delrows,0)
     return A, C, t
 
 
-def SudoInput2(A,C):       #Single position method
+def SudoInput2(A,C, one_step=False):       #Single position method
     t=False
     
     for i in range(9):
@@ -53,6 +55,8 @@ def SudoInput2(A,C):       #Single position method
                 A[c[0,9],c[0,10]]=j+1
                 C=clearC(C,c[0,9],c[0,10],c[0,11],j+1)
                 C=np.delete(C,delrows[0,whrows],0)
+                if one_step:
+                    return A, C, t
 
     for i in range(9):
         for j in range(9):
@@ -66,6 +70,8 @@ def SudoInput2(A,C):       #Single position method
                 A[c[0,9],c[0,10]]=j+1
                 C=clearC(C,c[0,9],c[0,10],c[0,11],j+1)
                 C=np.delete(C,delrows[0,whrows],0)
+                if one_step:
+                    return A, C, t
 
     for i in range(9):
         for j in range(9):
@@ -79,6 +85,8 @@ def SudoInput2(A,C):       #Single position method
                 A[c[0,9],c[0,10]]=j+1
                 C=clearC(C,c[0,9],c[0,10],c[0,11],j+1)
                 C=np.delete(C,delrows[0,whrows],0)
+                if one_step:
+                    return A, C, t
 
     return A, C, t
 

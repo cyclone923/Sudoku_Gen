@@ -30,21 +30,22 @@ def np_back_torch(X):
     return X_tensor
 
 if __name__ == "__main__":
-    difficulty = "medium"
-    back_dir = "sudoku31to42_" + difficulty
+    difficulty = ""
+    back_dir = "sudoku" + difficulty
     # back_dir = "sudoku"
 
-    # with open(os.path.join(back_dir, 'features.pt'), 'rb') as f:
-    #     X_in = torch.load(f)
-    # with open(os.path.join(back_dir, 'labels.pt'), 'rb') as f:
-    #     Y_in = torch.load(f)
+    with open(os.path.join(back_dir, 'features.pt'), 'rb') as f:
+        X_in = torch.load(f)
+    with open(os.path.join(back_dir, 'labels.pt'), 'rb') as f:
+        Y_in = torch.load(f)
     # # #
-    # X_numpy, Y_numpy = process_inputs(X_in, Y_in)
-    # print(X_numpy[0])
-    # print(Y_numpy[0])
-    # exit(0)
-    # np.save(os.path.join(data_dir, 'features.npy'), X_numpy)
-    # np.save(os.path.join(data_dir, 'labels.npy'), Y_numpy)
+    X_numpy, Y_numpy = process_inputs(X_in, Y_in)
+    print(X_numpy[0])
+    print(Y_numpy[0])
+
+    np.save(os.path.join(back_dir, difficulty+'.npy'), X_numpy)
+    np.save(os.path.join(back_dir, difficulty+'label.npy'), Y_numpy)
+    exit(0)
 
     file_X = difficulty + ".npy"
     file_Y = difficulty + "_label.npy"

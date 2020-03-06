@@ -3,6 +3,65 @@ import numpy as np
 from src.utils import SolverUtils as SV
 from src.checkers import SudoCheck as SC
 
+def multi_rule_inference(C):
+    C, er3 = SV.CandLineEr(C)
+    if er3:
+        return C, True
+    C, er4 = SV.multLineEr(C)
+    if er4:
+        return C, True
+    C, er5 = SV.nakedPairEr(C)
+    if er5:
+        return C, True
+    C, er6 = SV.nakedTuplesEr(C)
+    if er6:
+        return C, True
+    C, er7 = SV.hiddenPairEr(C)
+    if er7:
+        return C, True
+    C, er8 = SV.hiddenTupleEr(C)
+    if er8:
+        return C, True
+    C, er9 = SV.XWingEr(C)
+    if er9:
+        return C, True
+    C, er10 = SV.SwordFishEr(C)
+    if er10:
+        return C, True
+    return C, False
+
+
+
+def SudoSolveOneStep(A, C, n):
+    if n == 1:
+        C = SV.ConstructC(A)
+        return SudoSolveOneStep(A, C, 2)
+    else:
+        while True:
+            A, C, DidIn1 = SV.SudoInput1(A, C, one_step=True)
+            if DidIn1:
+                return A
+            A, C, DidIn2 = SV.SudoInput2(A, C, one_step=True)
+            if DidIn2:
+                return A
+            C, DidInfer = multi_rule_inference(C)
+            if DidInfer:
+                continue
+            else:
+                r = SV.FindMinRow(C)
+                rC = C[r, :]
+                for i in range(9):
+                    if (rC[i] > 0):
+                        A2 = deepcopy(A)
+                        C2 = deepcopy(C)
+                        A2[rC[9], rC[10]] = rC[i]
+                        A2_before = deepcopy(A2)
+                        C2 = SV.clearC(C2, rC[9], rC[10], rC[11], rC[i])
+                        C2 = np.delete(C2, r, 0)
+                        A2 = SudoSolveIt2(A2, C2, 2)
+                        if np.min(A2) > 0:
+                            return A2_before
+
 
 def SudoSolveIt(A,C,n):
     if n==1:
